@@ -16,6 +16,7 @@ Does what it says on the tin!
 
 So what is the plugin? The name says it all really, this just adds a Save and Visit button to all pages, posts and custom post types. We've done away with the click so no longer do you need to hit "Update" or "Publish" then click back your post/page on frontend. Save and Visit will just take you right back to your post details! Simples!
 
+This plugin is based on this plugin https://wordpress.org/plugins/lightbulb-save-and-close/
 
 == Installation ==
 
