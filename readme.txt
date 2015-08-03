@@ -27,5 +27,9 @@ This plugin is based on this plugin https://wordpress.org/plugins/lightbulb-save
 
 == Changelog ==
 
+= 1.0.1 =
+* Sanitization of request
+* Removed http referer checking and after save direct redirect to post permalink
+
 = 1.0.0 =
 * Initial public release

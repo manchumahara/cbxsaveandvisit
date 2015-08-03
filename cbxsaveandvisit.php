@@ -4,7 +4,7 @@
  * Plugin Name: CBX Save and Visit
  * Plugin URI:  http://wpboxr.com/product/cbx-save-and-visit
  * Description: Adds a button to the Edit Post page which saves the post and redirects back to the post details page.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      wpboxr
  * Author URI:  http://wpboxr.com
  * License:     GPL2
@@ -29,18 +29,22 @@ class CBXSaveandVisit {
 	 */
 	public static function add_button() {
 		// work out if post is published or not
-		$status = get_post_status($_GET['post']);
+		$post_id = (int) $_GET['post'];
+		$status = get_post_status($post_id);
+		//$status = preg_replace('/[^a-z0-9_-]+/i', '', $_REQUEST['post_status']);
 		// if the post is already published, label the button as "update"
 		$button_label = ($status == 'publish' || $status == 'private') ? 'Update and Visit' : 'Publish and Visit';
 
 		// TODO: fix duplicated IDs
-        //var_dump($_SERVER['HTTP_REFERER']);
+
+		//$http_referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER']: '';
+		//var_dump($http_referer);
 		?>
 
 		<div id="major-publishing-actions" style="overflow:hidden">
 			<div id="publishing-action">
-				<input type="hidden" name="savevisit_referer" value="<?php echo $_SERVER['HTTP_REFERER'] ?>">
-				<input type="submit" tabindex="5" value="<?php echo $button_label ?>" class="button-primary" id="cbxsaveandvisitbtn" name="save-visit">
+				<!--input type="hidden" name="savevisit_referer" value="<?php echo esc_attr($http_referer); ?>" /-->
+				<input type="submit" tabindex="5" value="<?php echo $button_label ?>" class="button-primary" id="cbxsaveandvisitbtn" name="save-visit" />
 			</div>
 		</div>
 
@@ -60,33 +64,39 @@ class CBXSaveandVisit {
 
 		// we want to publish new posts
 		$post_status = 'publish';
+		$post_id = (int) $_POST['post_ID'];
+
 
 		// if the post was published, allow the status to be changed to something else (eg. draft)
-		if ($_POST['original_post_status'] == 'publish' || $_POST['original_post_status'] == 'private') {
-			$post_status = $_POST['post_status'];
+		if (preg_replace('/[^a-z0-9_-]+/i', '', $_POST['original_post_status']) == 'publish' || preg_replace('/[^a-z0-9_-]+/i', '', $_POST['original_post_status']) == 'private') {
+			//$post_status = $_POST['post_status'];
+			$post_status = preg_replace('/[^a-z0-9_-]+/i', '', $_POST['post_status']);
 		}
 		// handle private post visibility
 		if ($_POST['post_status'] == 'private') {
 			$post_status = 'private';
 		}
 
-		wp_update_post(array('ID' => $_POST['post_ID'], 'post_status' => $post_status));
+		wp_update_post(array('ID' => $post_id, 'post_status' => $post_status));
 
 		// if we have an HTTP referer saved, and it's a post listing page, redirect back to that (maintains pagination, filters, etc.)
-		if (isset($_POST['savevisit_referer']) && strstr($_POST['savevisit_referer'], 'edit.php') !== false) {
-			if (strstr($_POST['savevisit_referer'], 'lbsmessage') === false) {
-				if (strstr($_POST['savevisit_referer'], '?') === false) {
-					return $_POST['savevisit_referer'] . '?lbsmessage=1';
+		/*
+		if (isset($_POST['savevisit_referer']) && strstr(esc_attr($_POST['savevisit_referer']), 'edit.php') !== false) {
+
+			if (strstr(esc_attr($_POST['savevisit_referer']), 'lbsmessage') === false) {
+				if (strstr(esc_attr($_POST['savevisit_referer']), '?') === false) {
+					return esc_attr($_POST['savevisit_referer']) . '?lbsmessage=1';
 				}
-				return $_POST['savevisit_referer'] . '&lbsmessage=1';
+				return esc_attr($_POST['savevisit_referer']) . '&lbsmessage=1';
 			}
-			return $_POST['savevisit_referer'];
+			return esc_attr($_POST['savevisit_referer']);
 		}
+		*/
 		// no referer saved, just redirect back to the main post listing page for the post type
-		else {
-			//return get_admin_url() . 'edit.php?lbsmessage=1&post_type=' . $_POST['post_type'];
-            return get_permalink($_POST['post_ID']);
-		}
+		//else {
+
+            return get_permalink($post_id);
+		//}
 	}
 
 	/**
