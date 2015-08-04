@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: edit, editing, save, visit, publish
 Requires at least: 3.3
 Tested up to: 4.2.2
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,8 @@ This plugin is based on this plugin https://wordpress.org/plugins/lightbulb-save
 
 
 == Changelog ==
-
+= 1.0.2
+* More standard sanitization
 = 1.0.1 =
 * Sanitization of request
 * Removed http referer checking and after save direct redirect to post permalink
